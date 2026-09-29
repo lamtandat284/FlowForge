@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "0.1.0",
+  "runId": "INV-DEMO-01",
+  "designSystem": {
+    "theme": "warehouse-neutral",
+    "locale": "vi-VN"
+  },
+  "navigation": {
+    "entryScreenId": "SCR-MOVEMENTS"
+  },
+  "screens": [
+    {
+      "id": "SCR-MOVEMENTS",
+      "title": "Lịch sử nhập xuất kho",
+      "pattern": "list",
+      "dataSource": {
+        "collection": "inventoryMovements"
+      },
+      "actorIds": ["ACT-WH"],
+      "requirementIds": ["REQ-01", "REQ-02", "REQ-03", "REQ-04"],
+      "components": [
+        {
+          "id": "CMP-MOVEMENT-TABLE",
+          "type": "table",
+          "label": "Các giao dịch kho",
+          "columns": [
+            { "field": "transactionType", "label": "Loại" },
+            { "field": "documentDate", "label": "Ngày chứng từ" },
+            { "field": "sku", "label": "Mã hàng" },
+            { "field": "productName", "label": "Tên hàng" },
+            { "field": "warehouse", "label": "Kho" },
+            { "field": "quantity", "label": "Số lượng" }
+          ],
+          "requirementIds": ["REQ-02"]
+        },
+        {
+          "id": "CMP-RECEIPT-BUTTON",
+          "type": "button",
+          "label": "Tạo phiếu nhập",
+          "requirementIds": ["REQ-03"]
+        },
+        {
+          "id": "CMP-ISSUE-BUTTON",
+          "type": "button",
+          "label": "Tạo phiếu xuất",
+          "requirementIds": ["REQ-04"]
+        }
+      ],
+      "states": ["default", "empty"],
+      "actions": [
+        {
+          "id": "ACT-OPEN-RECEIPT",
+          "label": "Tạo phiếu nhập",
+          "requirementIds": ["REQ-03"],
+          "behavior": { "type": "navigate" }
+        },
+        {
+          "id": "ACT-OPEN-ISSUE",
+          "label": "Tạo phiếu xuất",
+          "requirementIds": ["REQ-04"],
+          "behavior": { "type": "navigate" }
+        }
+      ]
+    },
+    {
+      "id": "SCR-RECEIPT",
+      "title": "Tạo phiếu nhập kho",
+      "pattern": "form",
+      "actorIds": ["ACT-WH"],
+      "requirementIds": ["REQ-03"],
+      "components": [
+        { "id": "CMP-R-DATE", "type": "date-input", "label": "Ngày chứng từ", "field": "documentDate", "required": true, "requirementIds": ["REQ-03"] },
+        { "id": "CMP-R-SKU", "type": "text-input", "label": "Mã hàng", "field": "sku", "required": true, "requirementIds": ["REQ-03"] },
+        { "id": "CMP-R-NAME", "type": "text-input", "label": "Tên hàng", "field": "productName", "required": true, "requirementIds": ["REQ-03"] },
+        { "id": "CMP-R-WH", "type": "text-input", "label": "Kho", "field": "warehouse", "required": true, "requirementIds": ["REQ-03"] },
+        { "id": "CMP-R-QTY", "type": "text-input", "label": "Số lượng", "field": "quantity", "required": true, "requirementIds": ["REQ-03"] }
+      ],
+      "states": ["default", "validation-error", "success"],
+      "actions": [
+        {
+          "id": "ACT-SAVE-RECEIPT",
+          "label": "Lưu phiếu nhập",
+          "requirementIds": ["REQ-02", "REQ-03"],
+          "ruleIds": ["RULE-01", "RULE-02"],
+          "behavior": {
+            "type": "save-record",
+            "collection": "inventoryMovements",
+            "defaults": { "transactionType": "Nhập kho" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "SCR-ISSUE",
+      "title": "Tạo phiếu xuất kho",
+      "pattern": "form",
+      "actorIds": ["ACT-WH"],
+      "requirementIds": ["REQ-04"],
+      "components": [
+        { "id": "CMP-I-DATE", "type": "date-input", "label": "Ngày chứng từ", "field": "documentDate", "required": true, "requirementIds": ["REQ-04"] },
+        { "id": "CMP-I-SKU", "type": "text-input", "label": "Mã hàng", "field": "sku", "required": true, "requirementIds": ["REQ-04"] },
+        { "id": "CMP-I-NAME", "type": "text-input", "label": "Tên hàng", "field": "productName", "required": true, "requirementIds": ["REQ-04"] },
+        { "id": "CMP-I-WH", "type": "text-input", "label": "Kho", "field": "warehouse", "required": true, "requirementIds": ["REQ-04"] },
+        { "id": "CMP-I-QTY", "type": "text-input", "label": "Số lượng", "field": "quantity", "required": true, "requirementIds": ["REQ-04"] }
+      ],
+      "states": ["default", "validation-error", "success"],
+      "actions": [
+        {
+          "id": "ACT-SAVE-ISSUE",
+          "label": "Lưu phiếu xuất",
+          "requirementIds": ["REQ-02", "REQ-04"],
+          "ruleIds": ["RULE-01", "RULE-03"],
+          "behavior": {
+            "type": "save-record",
+            "collection": "inventoryMovements",
+            "defaults": { "transactionType": "Xuất kho" }
+          }
+        }
+      ]
+    }
+  ],
+  "flows": [
+    { "from": "SCR-MOVEMENTS", "actionId": "ACT-OPEN-RECEIPT", "to": "SCR-RECEIPT", "requirementIds": ["REQ-03"] },
+    { "from": "SCR-MOVEMENTS", "actionId": "ACT-OPEN-ISSUE", "to": "SCR-ISSUE", "requirementIds": ["REQ-04"] },
+    { "from": "SCR-RECEIPT", "actionId": "ACT-SAVE-RECEIPT", "to": "SCR-MOVEMENTS", "requirementIds": ["REQ-02", "REQ-03"] },
+    { "from": "SCR-ISSUE", "actionId": "ACT-SAVE-ISSUE", "to": "SCR-MOVEMENTS", "requirementIds": ["REQ-02", "REQ-04"] }
+  ],
+  "unmappedRequirements": []
+}

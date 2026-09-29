@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "0.1.0",
+  "runId": "LEAVE-01-DEMO",
+  "designSystem": { "theme": "neutral", "locale": "vi-VN" },
+  "navigation": { "entryScreenId": "SCR-LIST" },
+  "screens": [
+    {
+      "id": "SCR-LIST", "title": "Đơn nghỉ phép của tôi", "pattern": "list",
+      "dataSource": { "collection": "leaveRequests" },
+      "actorIds": ["ACT-EMP"], "requirementIds": ["REQ-01", "REQ-02"],
+      "components": [
+        { "id": "CMP-LIST", "type": "table", "label": "Danh sách đơn và trạng thái", "columns": [
+          { "field": "startDate", "label": "Ngày bắt đầu" },
+          { "field": "endDate", "label": "Ngày kết thúc" },
+          { "field": "status", "label": "Trạng thái" }
+        ], "requirementIds": ["REQ-02"] },
+        { "id": "CMP-CREATE", "type": "button", "label": "Tạo đơn", "requirementIds": ["REQ-01"] }
+      ],
+      "states": ["default", "empty"],
+      "actions": [{ "id": "ACT-CREATE", "label": "Tạo đơn", "requirementIds": ["REQ-01"] }]
+    },
+    {
+      "id": "SCR-CREATE", "title": "Tạo đơn nghỉ phép", "pattern": "form",
+      "actorIds": ["ACT-EMP"], "requirementIds": ["REQ-01"],
+      "components": [
+        { "id": "CMP-START", "type": "date-input", "label": "Ngày bắt đầu", "field": "startDate", "required": true, "requirementIds": ["REQ-01"] },
+        { "id": "CMP-END", "type": "date-input", "label": "Ngày kết thúc", "field": "endDate", "required": true, "requirementIds": ["REQ-01"] }
+      ],
+      "states": ["default", "validation-error", "success"],
+      "actions": [{ "id": "ACT-SUBMIT", "label": "Gửi", "requirementIds": ["REQ-01"], "ruleIds": ["RULE-01", "RULE-02", "RULE-03"],
+        "behavior": { "type": "save-record", "collection": "leaveRequests", "defaults": { "status": "Chờ duyệt" },
+          "validations": [{ "type": "date-order", "ruleId": "RULE-02", "startField": "startDate", "endField": "endDate", "message": "Ngày kết thúc không được trước ngày bắt đầu." }]
+        }
+      }]
+    }
+  ],
+  "flows": [
+    { "from": "SCR-LIST", "actionId": "ACT-CREATE", "to": "SCR-CREATE", "requirementIds": ["REQ-01"] },
+    { "from": "SCR-CREATE", "actionId": "ACT-SUBMIT", "to": "SCR-LIST", "requirementIds": ["REQ-01", "REQ-02"] }
+  ],
+  "unmappedRequirements": []
+}

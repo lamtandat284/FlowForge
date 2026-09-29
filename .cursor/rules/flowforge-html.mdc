@@ -1,0 +1,6 @@
+---
+description: FlowForge HTML mockup workflow for image, sprint, and revision requests
+alwaysApply: true
+---
+
+Read `AGENTS.md` and follow `.agents/skills/flowforge-html/SKILL.md` as the canonical workflow. Preserve previous runs, keep output self-contained, and report validation accurately.

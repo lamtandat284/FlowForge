@@ -1,0 +1,12 @@
+{
+  "runId": "INV-DEMO-01",
+  "staticValidation": "passed",
+  "coverage": {
+    "uiRequirementCount": 4,
+    "mappedCount": 4,
+    "unmapped": []
+  },
+  "warnings": [],
+  "browserQA": "not-run",
+  "baReview": "pending"
+}

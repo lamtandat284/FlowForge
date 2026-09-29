@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Canonical Spec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "runId", "project", "sources", "actors", "requirements", "rules", "openQuestions", "assumptions", "outOfScope"],
+  "properties": {
+    "schemaVersion": { "const": "0.1.0" },
+    "runId": { "type": "string", "minLength": 1 },
+    "project": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "sprint", "platform", "locale"],
+      "properties": {
+        "name": { "type": "string" }, "sprint": { "type": "string" },
+        "platform": { "const": "web" }, "locale": { "type": "string" }
+      }
+    },
+    "sources": { "type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "kind"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "name": { "type": "string" },
+        "kind": { "enum": ["sprint-brief", "markdown", "pdf", "docx", "image", "text", "other"] },
+        "hash": { "type": "string" }
+      }
+    } },
+    "actors": { "type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "name": { "type": "string" } }
+    } },
+    "requirements": { "type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "statement", "actorIds", "priority", "status", "uiRelevant", "evidence"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "enum": ["functional", "data", "rule", "nonfunctional"] },
+        "statement": { "type": "string", "minLength": 1 },
+        "actorIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "priority": { "enum": ["must", "should", "could"] },
+        "status": { "enum": ["confirmed", "inferred", "conflicting", "unresolved"] },
+        "uiRelevant": { "type": "boolean" },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      },
+      "allOf": [{ "if": { "properties": { "status": { "const": "confirmed" } } }, "then": { "properties": { "evidence": { "minItems": 1 } } } }]
+    } },
+    "rules": { "type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "statement", "requirementIds", "status", "evidence"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "statement": { "type": "string" },
+        "requirementIds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+        "status": { "enum": ["confirmed", "inferred", "conflicting", "unresolved"] },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      }
+    } },
+    "openQuestions": { "type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "question", "blocking", "relatedRequirementIds"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "question": { "type": "string" },
+        "blocking": { "type": "boolean" },
+        "relatedRequirementIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }
+      }
+    } },
+    "assumptions": { "type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "statement", "relatedRequirementIds", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "statement": { "type": "string" },
+        "relatedRequirementIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "status": { "enum": ["proposed", "accepted", "rejected"] }
+      }
+    } },
+    "outOfScope": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Z][A-Z0-9-]*$" },
+    "evidence": { "type": "object", "additionalProperties": false,
+      "required": ["sourceId", "locator"],
+      "properties": {
+        "sourceId": { "$ref": "#/$defs/id" },
+        "locator": { "type": "string", "minLength": 1 },
+        "excerpt": { "type": "string" }
+      }
+    }
+  }
+}

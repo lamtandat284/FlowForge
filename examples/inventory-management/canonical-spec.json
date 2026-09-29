@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "0.1.0",
+  "runId": "INV-DEMO-01",
+  "project": {
+    "name": "Quản lý kho",
+    "sprint": "DEMO-01",
+    "platform": "web",
+    "locale": "vi-VN"
+  },
+  "sources": [
+    {
+      "id": "SRC-1",
+      "name": "Yêu cầu trong Codex chat",
+      "kind": "text"
+    }
+  ],
+  "actors": [
+    {
+      "id": "ACT-WH",
+      "name": "Nhân viên kho"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "REQ-01",
+      "type": "functional",
+      "statement": "Tạo một prototype thể hiện luồng quản lý kho mẫu.",
+      "actorIds": ["ACT-WH"],
+      "priority": "must",
+      "status": "confirmed",
+      "uiRelevant": true,
+      "evidence": [
+        {
+          "sourceId": "SRC-1",
+          "locator": "Tin nhắn người dùng",
+          "excerpt": "luồng quản lý kho"
+        }
+      ]
+    },
+    {
+      "id": "REQ-02",
+      "type": "functional",
+      "statement": "Nhân viên kho xem lịch sử các giao dịch nhập và xuất kho.",
+      "actorIds": ["ACT-WH"],
+      "priority": "must",
+      "status": "inferred",
+      "uiRelevant": true,
+      "evidence": []
+    },
+    {
+      "id": "REQ-03",
+      "type": "functional",
+      "statement": "Nhân viên kho tạo phiếu nhập gồm ngày chứng từ, mã hàng, tên hàng, kho và số lượng.",
+      "actorIds": ["ACT-WH"],
+      "priority": "must",
+      "status": "inferred",
+      "uiRelevant": true,
+      "evidence": []
+    },
+    {
+      "id": "REQ-04",
+      "type": "functional",
+      "statement": "Nhân viên kho tạo phiếu xuất gồm ngày chứng từ, mã hàng, tên hàng, kho và số lượng.",
+      "actorIds": ["ACT-WH"],
+      "priority": "must",
+      "status": "inferred",
+      "uiRelevant": true,
+      "evidence": []
+    }
+  ],
+  "rules": [
+    {
+      "id": "RULE-01",
+      "statement": "Ngày chứng từ, mã hàng, tên hàng, kho và số lượng là bắt buộc trong demo.",
+      "requirementIds": ["REQ-03", "REQ-04"],
+      "status": "inferred",
+      "evidence": []
+    },
+    {
+      "id": "RULE-02",
+      "statement": "Phiếu nhập mới có loại giao dịch Nhập kho.",
+      "requirementIds": ["REQ-03"],
+      "status": "inferred",
+      "evidence": []
+    },
+    {
+      "id": "RULE-03",
+      "statement": "Phiếu xuất mới có loại giao dịch Xuất kho.",
+      "requirementIds": ["REQ-04"],
+      "status": "inferred",
+      "evidence": []
+    }
+  ],
+  "openQuestions": [
+    {
+      "id": "Q-01",
+      "question": "Có cho phép xuất vượt quá tồn khả dụng không?",
+      "blocking": false,
+      "relatedRequirementIds": ["REQ-04"]
+    },
+    {
+      "id": "Q-02",
+      "question": "Phiếu kho có cần quy trình duyệt không?",
+      "blocking": false,
+      "relatedRequirementIds": ["REQ-03", "REQ-04"]
+    },
+    {
+      "id": "Q-03",
+      "question": "Có quản lý nhiều vị trí/bin trong một kho không?",
+      "blocking": false,
+      "relatedRequirementIds": ["REQ-02", "REQ-03", "REQ-04"]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "ASM-01",
+      "statement": "Phạm vi mẫu gồm lịch sử biến động, nhập kho và xuất kho.",
+      "relatedRequirementIds": ["REQ-02", "REQ-03", "REQ-04"],
+      "status": "accepted"
+    },
+    {
+      "id": "ASM-02",
+      "statement": "Một nhân viên kho được tạo cả phiếu nhập và phiếu xuất.",
+      "relatedRequirementIds": ["REQ-03", "REQ-04"],
+      "status": "accepted"
+    },
+    {
+      "id": "ASM-03",
+      "statement": "Phiếu mới được lưu trực tiếp vào lịch sử giao dịch trong prototype.",
+      "relatedRequirementIds": ["REQ-02", "REQ-03", "REQ-04"],
+      "status": "accepted"
+    }
+  ],
+  "outOfScope": [
+    "Tính tồn khả dụng theo thời gian thực",
+    "Kiểm tra xuất vượt tồn",
+    "Phê duyệt phiếu",
+    "Quản lý lô, serial, hạn sử dụng và vị trí bin",
+    "Tích hợp ERP hoặc máy quét mã vạch"
+  ]
+}

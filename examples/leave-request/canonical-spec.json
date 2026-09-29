@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "0.1.0",
+  "runId": "LEAVE-01-DEMO",
+  "project": { "name": "Nghỉ phép", "sprint": "LEAVE-01", "platform": "web", "locale": "vi-VN" },
+  "sources": [{ "id": "SRC-1", "name": "sprint-brief.md", "kind": "sprint-brief" }],
+  "actors": [{ "id": "ACT-EMP", "name": "Nhân viên" }],
+  "requirements": [
+    {
+      "id": "REQ-01", "type": "functional", "statement": "Nhân viên tạo đơn nghỉ phép với ngày bắt đầu và kết thúc.",
+      "actorIds": ["ACT-EMP"], "priority": "must", "status": "confirmed", "uiRelevant": true,
+      "evidence": [{ "sourceId": "SRC-1", "locator": "Chức năng 1: Tạo đơn" }]
+    },
+    {
+      "id": "REQ-02", "type": "functional", "statement": "Nhân viên xem danh sách đơn của mình cùng trạng thái, kể cả khi danh sách trống.",
+      "actorIds": ["ACT-EMP"], "priority": "must", "status": "confirmed", "uiRelevant": true,
+      "evidence": [{ "sourceId": "SRC-1", "locator": "Chức năng 2: Xem danh sách" }]
+    }
+  ],
+  "rules": [
+    {
+      "id": "RULE-01", "statement": "Ngày bắt đầu và ngày kết thúc bắt buộc.", "requirementIds": ["REQ-01"],
+      "status": "confirmed", "evidence": [{ "sourceId": "SRC-1", "locator": "Chức năng 1: Quy tắc nghiệp vụ" }]
+    },
+    {
+      "id": "RULE-02", "statement": "Ngày kết thúc không được trước ngày bắt đầu.", "requirementIds": ["REQ-01"],
+      "status": "confirmed", "evidence": [{ "sourceId": "SRC-1", "locator": "Chức năng 1: Quy tắc nghiệp vụ" }]
+    },
+    {
+      "id": "RULE-03", "statement": "Đơn tạo thành công có trạng thái Chờ duyệt.", "requirementIds": ["REQ-01", "REQ-02"],
+      "status": "confirmed", "evidence": [{ "sourceId": "SRC-1", "locator": "Chức năng 1: Kết quả thành công" }]
+    }
+  ],
+  "openQuestions": [
+    { "id": "Q-01", "question": "Sprint sau có cho phép sửa đơn Chờ duyệt không?", "blocking": false, "relatedRequirementIds": ["REQ-02"] }
+  ],
+  "assumptions": [],
+  "outOfScope": ["Duyệt đơn", "Sửa đơn", "Kết nối hệ thống nhân sự thật"]
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UI Blueprint",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "runId", "designSystem", "navigation", "screens", "flows", "unmappedRequirements"],
+  "properties": {
+    "schemaVersion": { "const": "0.1.0" },
+    "runId": { "type": "string", "minLength": 1 },
+    "designSystem": { "type": "object", "additionalProperties": false,
+      "required": ["theme", "locale"],
+      "properties": { "theme": { "type": "string" }, "locale": { "type": "string" } }
+    },
+    "navigation": { "type": "object", "additionalProperties": false,
+      "required": ["entryScreenId"],
+      "properties": { "entryScreenId": { "$ref": "#/$defs/id" } }
+    },
+    "screens": { "type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "pattern", "actorIds", "requirementIds", "components", "states", "actions"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "title": { "type": "string" },
+        "pattern": { "enum": ["list", "detail", "form", "dashboard", "wizard", "search", "settings", "approval", "error", "access-denied"] },
+        "dataSource": { "type": "object", "additionalProperties": false,
+          "required": ["collection"],
+          "properties": { "collection": { "type": "string", "minLength": 1 } }
+        },
+        "actorIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "requirementIds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+        "components": { "type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "type", "label", "requirementIds"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "type": { "enum": ["text", "status", "button", "link", "text-input", "date-input", "select", "table", "card", "message", "custom"] },
+            "label": { "type": "string" }, "field": { "type": "string" },
+            "required": { "type": "boolean" },
+            "columns": { "type": "array", "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["field", "label"],
+              "properties": { "field": { "type": "string", "minLength": 1 }, "label": { "type": "string" } }
+            } },
+            "requirementIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }
+          }
+        } },
+        "states": { "type": "array", "minItems": 1,
+          "items": { "enum": ["default", "empty", "validation-error", "loading", "success", "error", "access-denied"] }
+        },
+        "actions": { "type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "label", "requirementIds"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" }, "label": { "type": "string" },
+            "requirementIds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
+            "ruleIds": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+            "behavior": { "type": "object", "additionalProperties": false,
+              "required": ["type"],
+              "properties": {
+                "type": { "enum": ["navigate", "save-record"] },
+                "collection": { "type": "string", "minLength": 1 },
+                "defaults": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean"] } },
+                "validations": { "type": "array", "items": {
+                  "type": "object", "additionalProperties": false,
+                  "required": ["type", "ruleId"],
+                  "properties": {
+                    "type": { "const": "date-order" }, "ruleId": { "$ref": "#/$defs/id" },
+                    "startField": { "type": "string" }, "endField": { "type": "string" },
+                    "message": { "type": "string" }
+                  }
+                } }
+              }
+            }
+          }
+        } }
+      }
+    } },
+    "flows": { "type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["from", "actionId", "to", "requirementIds"],
+      "properties": {
+        "from": { "$ref": "#/$defs/id" }, "actionId": { "$ref": "#/$defs/id" },
+        "to": { "$ref": "#/$defs/id" },
+        "requirementIds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } }
+      }
+    } },
+    "unmappedRequirements": { "type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["requirementId", "reason"],
+      "properties": {
+        "requirementId": { "$ref": "#/$defs/id" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    } }
+  },
+  "$defs": { "id": { "type": "string", "pattern": "^[A-Z][A-Z0-9-]*$" } }
+}

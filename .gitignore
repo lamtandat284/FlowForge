@@ -1,0 +1,8 @@
+node_modules/
+runs/*
+!runs/.gitkeep
+inputs/*
+!inputs/.gitkeep
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,49 @@
+[
+  {
+    "requirementId": "REQ-01",
+    "statement": "Tạo một prototype thể hiện luồng quản lý kho mẫu.",
+    "screens": [
+      "SCR-MOVEMENTS"
+    ],
+    "flows": [],
+    "unmappedReason": null
+  },
+  {
+    "requirementId": "REQ-02",
+    "statement": "Nhân viên kho xem lịch sử các giao dịch nhập và xuất kho.",
+    "screens": [
+      "SCR-MOVEMENTS"
+    ],
+    "flows": [
+      "SCR-RECEIPT:ACT-SAVE-RECEIPT:SCR-MOVEMENTS",
+      "SCR-ISSUE:ACT-SAVE-ISSUE:SCR-MOVEMENTS"
+    ],
+    "unmappedReason": null
+  },
+  {
+    "requirementId": "REQ-03",
+    "statement": "Nhân viên kho tạo phiếu nhập gồm ngày chứng từ, mã hàng, tên hàng, kho và số lượng.",
+    "screens": [
+      "SCR-MOVEMENTS",
+      "SCR-RECEIPT"
+    ],
+    "flows": [
+      "SCR-MOVEMENTS:ACT-OPEN-RECEIPT:SCR-RECEIPT",
+      "SCR-RECEIPT:ACT-SAVE-RECEIPT:SCR-MOVEMENTS"
+    ],
+    "unmappedReason": null
+  },
+  {
+    "requirementId": "REQ-04",
+    "statement": "Nhân viên kho tạo phiếu xuất gồm ngày chứng từ, mã hàng, tên hàng, kho và số lượng.",
+    "screens": [
+      "SCR-MOVEMENTS",
+      "SCR-ISSUE"
+    ],
+    "flows": [
+      "SCR-MOVEMENTS:ACT-OPEN-ISSUE:SCR-ISSUE",
+      "SCR-ISSUE:ACT-SAVE-ISSUE:SCR-MOVEMENTS"
+    ],
+    "unmappedReason": null
+  }
+]
